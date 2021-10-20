@@ -1,24 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
 
 function App() {
+    const [query, setQuery] = useState("");
+    // const [searchResult, setSearchResult] = useState([]);
+    // const [userName, setUserName] = useState("");
+    // const [isLoading, setIsLoading] = useState(false);
+
+    const handleSearch = async() => {
+      await fetch(`https://api.github.com/search/users?q=${query}`)
+      .then((response) => response.json())
+      .then((data) => {console.log(data)});
+    }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main>
+
+   <section className="search">
+     <input type="search" value={query} onChange={({target}) => setQuery(target.value)} placeholder="Username" readOnly={true}/>
+     <button onClick={handleSearch}>Pesquisar</button>
+   </section>
+
+   <section className="repos">Repositório</section>
+   </main>
   );
 }
 
