@@ -1,11 +1,19 @@
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [userName, setUserName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [repos, setRepos] = useState([]);
+
+  useEffect(() => {
+if(!userName) return;
+    fetch(`https://api.github.com/users/${userName}/repos`)
+    .then((response) => response.json())
+    .then((data) => setRepos(data))
+  },[userName]);
 
   const handleSearch = async () => {
 
@@ -56,7 +64,21 @@ function App() {
        
       </section>
 
-      <section className="repos">Repositório</section>
+      <section className="repos">
+        {userName ? (
+          <>
+            <h1>Repositórios de {userName}:</h1>
+
+            <ul>
+              {repos.map((repo) => (
+              <li key={repo.id}>{repo.name}</li>
+        ))}
+    </ul>
+        </>
+        ) : (
+          <p>Faça uma busca primeiro.</p>
+        )}
+        </section>
     </main>
   );
 }
