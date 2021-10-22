@@ -10,9 +10,14 @@ function App() {
 
   useEffect(() => {
 if(!userName) return;
-    fetch(`https://api.github.com/users/${userName}/repos`)
+    fetch(`https://api.github.com/users/${userName}/repos?per_page=100`)
     .then((response) => response.json())
-    .then((data) => setRepos(data))
+    .then((data) => {
+    
+      const result = data.sort((a,b) => (a.stargazers_count < 
+        b.stargazers_count ? 1: -1)); 
+      setRepos(result);
+  })
   },[userName]);
 
   const handleSearch = async () => {
@@ -71,7 +76,7 @@ if(!userName) return;
 
             <ul>
               {repos.map((repo) => (
-              <li key={repo.id}>{repo.name}</li>
+              <li key={repo.id}>{repo.name} ({repo.stargazers_count})</li>
         ))}
     </ul>
         </>
